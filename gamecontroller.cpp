@@ -1,10 +1,12 @@
 #include "gamecontroller.h"
+#include "gamemanager.h"
 #include <QDebug>
 
 
-GameController::GameController(GameInitializer gameInitializer)
+GameController::GameController(GameManager gameManager)
 {
-    vector<Question> questions = gameInitializer.initQuestions();
+    this->gameManager = gameManager;
+    vector<Question> questions = this->gameManager.getGameInitializer().initQuestions();
     this->questions = questions;
 }
 
@@ -59,4 +61,9 @@ int GameController::getCorrectAnswerId(int level)
 {
     Question question = questions.at(level);
     return question.getCorrectAnswerId();
+}
+
+void GameController::setResult(string result)
+{
+    this->gameManager.getGameDataWriter().setResultToJson(result);
 }

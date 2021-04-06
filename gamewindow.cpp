@@ -5,19 +5,24 @@
 #include "gamecontroller.h"
 #include "question.h"
 #include "gameinitializer.h"
+#include "gamedatawriter.h"
+#include "gamemanager.h"
+#include "datamanager.h"
 
 GameInitializer gameInitializer;
-GameController game(gameInitializer);
-int a = 0;
+GameDataWriter gameDataWriter;
+GameManager gameManager(gameInitializer, gameDataWriter);
+GameController gameController(gameManager);
+
 GameWindow::GameWindow(QWidget *parent) :
     QDialog(parent),
     ui(new Ui::GameWindow)
 {
     ui->setupUi(this);
     ui->resultBox->hide();
-    QString amountOfQuestions = game.getAmountOfQuestions();
+    QString amountOfQuestions = gameController.getAmountOfQuestions();
     ui->amountOfQuestions->setText(amountOfQuestions);
-    setLevelData(game.getLevel());
+    setLevelData(gameController.getLevel());
 }
 
 GameWindow::~GameWindow()
@@ -26,13 +31,13 @@ GameWindow::~GameWindow()
 }
 
 void GameWindow::setLevelData(int levelId) {
-    QString startQuestion = game.getCurrentQuestion(levelId);
-    QString firstAnswer = game.getCurrentAnswer(levelId, 0);
-    QString secondAnswer = game.getCurrentAnswer(levelId, 1);
-    QString thirdAnswer = game.getCurrentAnswer(levelId, 2);
-    QString fourthAnswer = game.getCurrentAnswer(levelId, 3);
+    QString startQuestion = gameController.getCurrentQuestion(levelId);
+    QString firstAnswer = gameController.getCurrentAnswer(levelId, 0);
+    QString secondAnswer = gameController.getCurrentAnswer(levelId, 1);
+    QString thirdAnswer = gameController.getCurrentAnswer(levelId, 2);
+    QString fourthAnswer = gameController.getCurrentAnswer(levelId, 3);
     QString currentQuestionNumber = QString::number(levelId + 1);
-    QString points = QString::number(game.getPoints());
+    QString points = QString::number(gameController.getPoints());
 
     ui->pointsValue->setText(points);
     ui->currentQuestionNumber->setText(currentQuestionNumber);
@@ -75,20 +80,20 @@ void GameWindow::resetRadioButtons(){
         ui->radioButtonsGroup->checkedButton()->setChecked(false);
         ui->radioButtonsGroup->setExclusive(true);
     }
-    changeCorrectAnswerColor(game.getCorrectAnswerId(game.getLevel()), true);
+    changeCorrectAnswerColor(gameController.getCorrectAnswerId(gameController.getLevel()), true);
 }
 
 void GameWindow::on_checkAnswerButton_clicked()
 {
     int btnId = getChosenId();
-    int currentLevel = game.getLevel();
-    bool isCorrect = game.isCorrectAnswer(currentLevel, btnId);
+    int currentLevel = gameController.getLevel();
+    bool isCorrect = gameController.isCorrectAnswer(currentLevel, btnId);
     if (isCorrect) {
-        int curentPoints = game.getPoints();
+        int curentPoints = gameController.getPoints();
         curentPoints++;
-        game.setPoints(curentPoints);
+        gameController.setPoints(curentPoints);
     }
-    changeCorrectAnswerColor(game.getCorrectAnswerId(currentLevel));
+    changeCorrectAnswerColor(gameController.getCorrectAnswerId(currentLevel));
     ui->checkAnswerButton->hide();
     ui->nextQuestionButton->show();
 }
@@ -96,16 +101,17 @@ void GameWindow::on_checkAnswerButton_clicked()
 void GameWindow::on_nextQuestionButton_clicked()
 {
     resetRadioButtons();
-    game.incLevel();
-    int currentLevel = game.getLevel();
-    int amountOfQuestions = game.getAmountOfQuestions().toInt();
+    gameController.incLevel();
+    int currentLevel = gameController.getLevel();
+    int amountOfQuestions = gameController.getAmountOfQuestions().toInt();
     if (amountOfQuestions <= currentLevel) {
-        QString points = QString::number(game.getPoints());
+        QString points = QString::number(gameController.getPoints());
         ui->resultPointsValue->setText(points);
         ui->resultBox->show();
         ui->nextQuestionButton->hide();
         ui->currectQuestion->hide();
         ui->radioButtons->hide();
+        gameController.setResult(to_string(gameController.getPoints()));
     } else {
         setLevelData(currentLevel);
         ui->checkAnswerButton->show();

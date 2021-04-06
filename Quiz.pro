@@ -11,7 +11,9 @@ CONFIG += c++11
 SOURCES += \
     datamanager.cpp \
     gamecontroller.cpp \
+    gamedatawriter.cpp \
     gameinitializer.cpp \
+    gamemanager.cpp \
     gamewindow.cpp \
     main.cpp \
     mainwindow.cpp \
@@ -20,7 +22,9 @@ SOURCES += \
 HEADERS += \
     datamanager.h \
     gamecontroller.h \
+    gamedatawriter.h \
     gameinitializer.h \
+    gamemanager.h \
     gamewindow.h \
     mainwindow.h \
     question.h

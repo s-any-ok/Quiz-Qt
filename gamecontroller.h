@@ -3,13 +3,13 @@
 #include "question.h"
 #include <list>
 #include <QtCore/QObject>
-#include "gameinitializer.h"
+#include "gamemanager.h"
 using namespace std;
 
 class GameController
 {
 public:
-    explicit GameController(GameInitializer);
+    explicit GameController(GameManager);
     ~GameController();
     void checkAnswer(int answerId);
     QString getCurrentQuestion(int num = 0);
@@ -21,11 +21,12 @@ public:
     QString getAmountOfQuestions();
     bool isCorrectAnswer(int level, int answerId);
     int getCorrectAnswerId(int level);
-
+    void setResult(string result);
 private:
     int points = 0;
     int currentLevel = 0;
     vector<Question> questions;
+    GameManager gameManager;
 
 };
 

@@ -4,6 +4,7 @@
 #include <QJsonObject>
 #include <QJsonArray>
 #include <QTextCodec>
+#include <QApplication>
 #include <string>
 #include "datamanager.h"
 
@@ -36,30 +37,30 @@ QJsonArray DataManager::getDataFromJson(string fileName, string objName)
 
 void DataManager::setDataToJson(string fileName, string result)
   {
-    QFile file;
-    string folderPath = ":/resources/data/";
+    string folderPath = "E:/Quiz/Quiz/data/";
     string filePath = folderPath + fileName + ".json";
     QString fileNameUtf8 = QString::fromUtf8(filePath.c_str());
-    file.setFileName(fileNameUtf8);
 
-    if(!file.open(QIODevice::ReadWrite)) {
-        qDebug() << "File open error";
-    } else {
-        qDebug() <<"File open!";
-    }
- // Insert a key-value pair using the QJsonObject object.
-    QJsonObject jsonObject;
-    QString qstr = QString::fromStdString(result);
-    jsonObject.insert("result", qstr);
-    jsonObject.insert("time", QDateTime::currentDateTime().toString());
-
- // Set the json object using QJsonDocument
-    QJsonDocument jsonDoc;
-    jsonDoc.setObject(jsonObject);
-
- // Write json to the file as text and close the file.
-    file.write(jsonDoc.toJson());
+    QFile file(fileNameUtf8);
+    file.open(QIODevice::ReadOnly | QIODevice::Text);
+    QJsonParseError JsonParseError;
+    QJsonDocument JsonDocument = QJsonDocument::fromJson(file.readAll(), &JsonParseError);
     file.close();
+    QJsonObject RootObject = JsonDocument.object();
+    QJsonArray ref = RootObject.find("results")->toArray();
 
-    qDebug() << "Write to file";
+    QString qresult = QString::fromStdString(result);
+    auto data1 = QJsonObject(
+    {
+    qMakePair(QString("result"), QJsonValue(qresult)),
+    qMakePair(QString("date"), QDateTime::currentDateTime().toString())
+    });
+
+    ref.push_back(QJsonValue(data1));
+    RootObject.insert(QString("results"), QJsonValue(ref));
+    JsonDocument.setObject(RootObject);
+
+    file.open(QFile::WriteOnly | QFile::Text | QFile::Truncate);
+    file.write(JsonDocument.toJson());
+    file.close();
   }
