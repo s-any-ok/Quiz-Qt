@@ -77,47 +77,11 @@ QJsonArray DatabaseManager::getData(string fileName, string objName)
 
 void DatabaseManager::setData(string fileName, string result)
   {
-//    string folderPath = "D:/Quiz/Quiz-Qt/data/";
-//    string filePath = folderPath + fileName + ".json";
-//    QString fileNameUtf8 = QString::fromUtf8(filePath.c_str());
-
-//    QFile file(fileNameUtf8);
-//    file.open(QIODevice::ReadOnly | QIODevice::Text);
-//    QJsonParseError JsonParseError;
-//    QJsonDocument JsonDocument = QJsonDocument::fromJson(file.readAll(), &JsonParseError);
-//    file.close();
-//    QJsonObject RootObject = JsonDocument.object();
-//    QJsonArray ref = RootObject.find("results")->toArray();
-
-//    QString qresult = QString::fromStdString(result);
-//    auto data1 = QJsonObject(
-//    {
-//    qMakePair(QString("result"), QJsonValue(qresult)),
-//    qMakePair(QString("date"), QDateTime::currentDateTime().toString())
-//    });
-
-//    ref.push_back(QJsonValue(data1));
-//    RootObject.insert(QString("results"), QJsonValue(ref));
-//    JsonDocument.setObject(RootObject);
-
-//    file.open(QFile::WriteOnly | QFile::Text | QFile::Truncate);
-//    file.write(JsonDocument.toJson());
-//    file.close();
-
     Connect();
     QString qresult = QString::fromStdString(result);
-//    QSqlQuery query(QString("INSERT INTO Results(id, date, result) VALUES(?, ?, ?)"));
-//    query.bindValue(0, 0);
-//    query.bindValue(1, qresult.toInt());
-//    query.bindValue(2, QDateTime::currentDateTime().toString());
     QSqlQuery query;
-        query.prepare("INSERT INTO Results(date, result) VALUES (:date, :result);");
-        query.bindValue(":date", qresult.toInt());
-        query.bindValue(":result", QDateTime::currentDateTime().toString());
-
-        if(!query.exec()){
-                qDebug() << "error insert into " << query.lastError();
-            } else {
-                qDebug() << "ok ";
-            }
+        query.prepare("INSERT INTO result(date, result) VALUES (:date, :result);");
+        query.bindValue(":result", qresult.toInt());
+        query.bindValue(":date", QDateTime::currentDateTime().toString());
+        query.exec();
   }
