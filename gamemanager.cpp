@@ -1,8 +1,10 @@
 #include "gamemanager.h"
+#include "databasemanager.h"
 
 GameManager::GameManager(GameInitializer gameInitializer, GameDataWriter gameDataWriter)
 {
-    DataManager dataManager;
+    DatabaseManager dataManager;
+    dataManager.setDB("D:/SQLiteDatabaseBrowserPortable/Data/", "database.db");
     this->gameInitializer = gameInitializer;
     this->gameDataWriter = gameDataWriter;
 

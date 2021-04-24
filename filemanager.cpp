@@ -6,15 +6,14 @@
 #include <QTextCodec>
 #include <QApplication>
 #include <string>
-#include "datamanager.h"
+#include "filemanager.h"
 
-DataManager::DataManager(){
+FileManager::FileManager(){
     QTextCodec::setCodecForLocale(QTextCodec::codecForName("UTF-8"));
 }
+ FileManager::~FileManager(){}
 
-DataManager::~DataManager(){}
-
-QJsonArray DataManager::getData(string fileName, string objName)
+QJsonArray FileManager::getData(string fileName, string objName)
   {
     QString settings;
     QFile file;
@@ -36,7 +35,7 @@ QJsonArray DataManager::getData(string fileName, string objName)
     return array;
   }
 
-void DataManager::setData(string fileName, string result)
+void FileManager::setData(string fileName, string result)
   {
     string folderPath = "D:/Quiz/Quiz-Qt/data/";
     string filePath = folderPath + fileName + ".json";

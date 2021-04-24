@@ -5,13 +5,13 @@
 class GameDataWriter
 {
 public:
-    explicit GameDataWriter(DataManager);
+    explicit GameDataWriter(DatabaseManager);
     explicit GameDataWriter();
-    void setDataManager(DataManager);
+    void setDataManager(DatabaseManager);
     ~GameDataWriter();
-    void setResultToJson(string result);
+    void setResult(string result);
 private:
-    DataManager datamanager;
+    DatabaseManager datamanager;
     string resultsFileName = "results";
 };
 

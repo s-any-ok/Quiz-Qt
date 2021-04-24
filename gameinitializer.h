@@ -9,13 +9,13 @@ using namespace std;
 class GameInitializer
 {
 public:
-    explicit GameInitializer(DataManager);
+    explicit GameInitializer(DatabaseManager);
     explicit GameInitializer();
     ~GameInitializer();
-    void setDataManager(DataManager);
+    void setDataManager(DatabaseManager);
     vector<Question> initQuestions();
 private:
-    DataManager datamanager;
+    DatabaseManager datamanager;
 };
 
 #endif // GAMEINITIALIZER_H

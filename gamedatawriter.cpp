@@ -4,12 +4,12 @@ GameDataWriter::GameDataWriter()
 {
 }
 
-void GameDataWriter::setDataManager(DataManager dataManager)
+void GameDataWriter::setDataManager(DatabaseManager dataManager)
 {
     this->datamanager = dataManager;
 }
 
-GameDataWriter::GameDataWriter(DataManager dataManager)
+GameDataWriter::GameDataWriter(DatabaseManager dataManager)
 {
     this->datamanager = dataManager;
 }
@@ -17,6 +17,6 @@ GameDataWriter::GameDataWriter(DataManager dataManager)
 GameDataWriter::~GameDataWriter()
 {}
 
-void GameDataWriter::setResultToJson(string result){
-    this->datamanager.setDataToJson(this->resultsFileName, result);
+void GameDataWriter::setResult(string result){
+    this->datamanager.setData(this->resultsFileName, result);
 }

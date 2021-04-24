@@ -9,7 +9,7 @@
 #include <QString>
 #include <iostream>
 
-GameInitializer::GameInitializer(DataManager dataManager)
+GameInitializer::GameInitializer(DatabaseManager dataManager)
 {
     this->datamanager = dataManager;
 }
@@ -22,7 +22,7 @@ GameInitializer::~GameInitializer()
 
 }
 
-void GameInitializer::setDataManager(DataManager dataManager)
+void GameInitializer::setDataManager(DatabaseManager dataManager)
 {
     this->datamanager = dataManager;
 }
@@ -32,7 +32,7 @@ void GameInitializer::setDataManager(DataManager dataManager)
 vector<Question> GameInitializer::initQuestions()
 {
     vector<Question> questions;
-    QJsonArray data = this->datamanager.getDataFromJson("questions", "questions");
+    QJsonArray data = this->datamanager.getData("questions", "questions");
     foreach (const QJsonValue & v, data) {
         int id = v.toObject().value("id").toInt();
         string question = v.toObject().value("question").toString().toLocal8Bit().constData();

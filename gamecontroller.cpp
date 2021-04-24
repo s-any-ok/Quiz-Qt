@@ -65,5 +65,5 @@ int GameController::getCorrectAnswerId(int level)
 
 void GameController::setResult(string result)
 {
-    this->gameManager.getGameDataWriter().setResultToJson(result);
+    this->gameManager.getGameDataWriter().setResult(result);
 }

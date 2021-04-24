@@ -2,14 +2,19 @@
 #define DATAMANAGER_H
 #include <string>
 #include <QJsonArray>
+#include "databasemanager.h"
 using namespace std;
 
 class DataManager
 {
 public:
     DataManager();
-    QJsonArray getDataFromJson(string fileName, string objName);
-    void setDataToJson(string fileName, string result);
+    ~DataManager();
+    QJsonArray getData(string fileName, string objName);
+    void setData(string fileName, string result);
+private:
+    DatabaseManager dbmanager;
 };
+
 
 #endif // DATAMANAGER_H
