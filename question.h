@@ -10,6 +10,7 @@ class Question
 
 public:
     explicit Question(int id, int correctAnswer, string question, vector<string> answers);
+    explicit Question(string row);
     ~Question();
     string getQuestion();
     string getAnswerById(int);

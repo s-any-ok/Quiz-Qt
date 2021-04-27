@@ -2,6 +2,7 @@
 #define GAMEINITIALIZER_H
 #include "question.h"
 #include "datamanager.h"
+#include "clientmanager.h"
 #include <vector>
 using namespace std;
 
@@ -14,6 +15,7 @@ public:
     ~GameInitializer();
     void setDataManager(DatabaseManager);
     vector<Question> initQuestions();
+    vector<Question> initQuestionsFromServer();
 private:
     DatabaseManager datamanager;
 };

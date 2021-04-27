@@ -49,3 +49,26 @@ vector<Question> GameInitializer::initQuestions()
     }
     return questions;
 }
+
+vector<Question> GameInitializer::initQuestionsFromServer()
+{
+    ClientManager client;
+    QJsonArray data = client.getData("questions", "questions");
+    vector<Question> questions;
+
+    foreach (const QJsonValue & v, data) {
+        int id = v.toObject().value("id").toInt();
+        string question = v.toObject().value("question").toString().toLocal8Bit().constData();
+        int correctAnswerId = v.toObject().value("correctAnswer").toInt();
+
+        QJsonArray answers =  v.toObject().value("answers").toArray();
+        vector<string> answersList;
+        foreach (const QJsonValue & v, answers) {
+            string answer = v.toString().toLocal8Bit().constData();
+            answersList.push_back(answer);
+        }
+        Question q(id, correctAnswerId, question, answersList);
+        questions.push_back(q);
+    }
+    return questions;
+}
