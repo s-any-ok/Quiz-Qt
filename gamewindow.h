@@ -2,6 +2,8 @@
 #define GAMEWINDOW_H
 
 #include <QDialog>
+#include "clientmanager.h"
+#include "mainwindow.h"
 
 namespace Ui {
 class GameWindow;
@@ -18,14 +20,18 @@ public:
     int getChosenId();
     void changeCorrectAnswerColor(int answerId, bool isShowen = false);
     void resetRadioButtons();
+    void setClient(ClientManager *client);
 
 private slots:
     void on_checkAnswerButton_clicked();
 
     void on_nextQuestionButton_clicked();
 
+    void on_getGameDataButton_clicked();
+
 private:
     Ui::GameWindow *ui;
+    ClientManager* _client;
 };
 
 #endif // GAMEWINDOW_H

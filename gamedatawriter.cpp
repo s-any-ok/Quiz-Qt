@@ -20,3 +20,7 @@ GameDataWriter::~GameDataWriter()
 void GameDataWriter::setResult(string result){
     this->datamanager.setData(this->resultsFileName, result);
 }
+
+void GameDataWriter::setResultToServer(string result){
+    this->datamanager.setData(this->resultsFileName, result);
+}

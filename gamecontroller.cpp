@@ -1,16 +1,27 @@
 #include "gamecontroller.h"
 #include "gamemanager.h"
+#include "gamemanager.h"
 #include <QDebug>
 
 
 GameController::GameController(GameManager gameManager)
 {
     this->gameManager = gameManager;
+}
+
+GameController::~GameController(){}
+
+void GameController::initQuestion()
+{
     vector<Question> questions = this->gameManager.getGameInitializer().initQuestions();
     this->questions = questions;
 }
 
-GameController::~GameController(){}
+void GameController::initQuestionFromServer(QJsonArray data)
+{
+    vector<Question> questions = this->gameManager.getGameInitializer().initQuestionsFromServer(data);
+    this->questions = questions;
+}
 
 QString GameController::getCurrentQuestion(int num)
 {

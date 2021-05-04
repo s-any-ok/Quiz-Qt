@@ -3,6 +3,7 @@
 #include "question.h"
 #include "datamanager.h"
 #include "clientmanager.h"
+#include <QJsonArray>
 #include <vector>
 using namespace std;
 
@@ -15,7 +16,7 @@ public:
     ~GameInitializer();
     void setDataManager(DatabaseManager);
     vector<Question> initQuestions();
-    vector<Question> initQuestionsFromServer();
+    vector<Question> initQuestionsFromServer(QJsonArray data);
 private:
     DatabaseManager datamanager;
 };

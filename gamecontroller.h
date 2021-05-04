@@ -4,6 +4,8 @@
 #include <list>
 #include <QtCore/QObject>
 #include "gamemanager.h"
+#include "clientmanager.h"
+
 using namespace std;
 
 class GameController
@@ -22,12 +24,13 @@ public:
     bool isCorrectAnswer(int level, int answerId);
     int getCorrectAnswerId(int level);
     void setResult(string result);
+    void initQuestion();
+    void initQuestionFromServer(QJsonArray data);
 private:
     int points = 0;
     int currentLevel = 0;
     vector<Question> questions;
     GameManager gameManager;
-
 };
 
 #endif // GAMECONTROLLER_H

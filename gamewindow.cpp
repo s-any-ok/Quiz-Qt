@@ -8,6 +8,8 @@
 #include "gamedatawriter.h"
 #include "gamemanager.h"
 #include "datamanager.h"
+#include <chrono>
+#include <thread>
 
 GameInitializer gameInitializer;
 GameDataWriter gameDataWriter;
@@ -20,14 +22,29 @@ GameWindow::GameWindow(QWidget *parent) :
 {
     ui->setupUi(this);
     ui->resultBox->hide();
-    QString amountOfQuestions = gameController.getAmountOfQuestions();
-    ui->amountOfQuestions->setText(amountOfQuestions);
-    setLevelData(gameController.getLevel());
+    ClientManager *client = new ClientManager();
+    setClient(client);
 }
 
 GameWindow::~GameWindow()
 {
     delete ui;
+}
+
+void GameWindow::setClient(ClientManager *client)
+{
+    _client = client;
+    _client->getDataFromServer();
+}
+
+void GameWindow::on_getGameDataButton_clicked()
+{
+    ui->getGameDataButton->hide();
+    auto data = _client->getJsonData();
+    gameController.initQuestionFromServer(data);
+    QString amountOfQuestions = gameController.getAmountOfQuestions();
+    ui->amountOfQuestions->setText(amountOfQuestions);
+    setLevelData(gameController.getLevel());
 }
 
 void GameWindow::setLevelData(int levelId) {
@@ -82,7 +99,6 @@ void GameWindow::resetRadioButtons(){
     }
     changeCorrectAnswerColor(gameController.getCorrectAnswerId(gameController.getLevel()), true);
 }
-
 void GameWindow::on_checkAnswerButton_clicked()
 {
     int btnId = getChosenId();
@@ -97,7 +113,6 @@ void GameWindow::on_checkAnswerButton_clicked()
     ui->checkAnswerButton->hide();
     ui->nextQuestionButton->show();
 }
-
 void GameWindow::on_nextQuestionButton_clicked()
 {
     resetRadioButtons();
@@ -111,7 +126,8 @@ void GameWindow::on_nextQuestionButton_clicked()
         ui->nextQuestionButton->hide();
         ui->currectQuestion->hide();
         ui->radioButtons->hide();
-        gameController.setResult(to_string(gameController.getPoints()));
+        if (_client) _client->setDataToServer(to_string(gameController.getPoints()));
+        else gameController.setResult(to_string(gameController.getPoints()));
     } else {
         setLevelData(currentLevel);
         ui->checkAnswerButton->show();

@@ -13,6 +13,10 @@ ClientManager::~ClientManager()
 {
 }
 
+QJsonArray ClientManager::getJsonData() {
+    return dataJson;
+}
+
 void ClientManager::connectToHost()
 {
     socket->connectToHost("127.0.0.1",5555);
@@ -32,53 +36,7 @@ void ClientManager::sockReady()
         std::string stdString(Data.constData(), Data.length());
         QString qstr = QString::fromStdString(stdString);
         DataStr = stdString;
-        qDebug()<<qstr;
-
-
-        string data = DataStr;
-        int dataSize = DataStr.size();
-        auto array = QJsonArray();
-        auto question = QJsonObject();
-
-        auto questions = new vector<string>;
-        int sizeOfLasQuestion;
-
-        for(int i = 0; i < 2; i++)
-        {
-            questions->push_back(data.substr(0, data.find("$$$")));
-            QString qstr = QString::fromStdString(data.substr(0, data.find("$$$")));
-            qDebug() << qstr;
-            sizeOfLasQuestion = questions[i].size();
-            dataSize -= sizeOfLasQuestion + 3;
-            data = data.substr(sizeOfLasQuestion + 3, dataSize);
-        }
-
-//        for(int i = 0; i < 5; i++)
-//        {
-//            string row = questions->at(i);
-//            int id = stoi(row.substr(row.find("--(id)--") + 8, row.find("--(correct answer)--") - row.find("--(id)--") - 8));
-//            int correctAnswer = stoi(row.substr(row.find("--(correct answer)--") + 20, row.find("--(question)--") - row.find("--(correct answer)--") - 20));
-//            string QuestionText = row.substr(row.find("--(question)--") + 14, row.find("--(answer 1)--") - row.find("--(question)--") - 14);
-//            vector<string> answers;
-//            string answer;
-//            for (int i = 1; i < 5; i++)
-//            {
-//                answer = row.substr(row.find("--(answer " + to_string(i) + ")--") + 14, row.find("--(answer " + to_string(i + 1) + ")--") - row.find("--(answer " + to_string(i) + ")--") - 14);
-//                answers.push_back(answer);
-//            }
-
-//            question = QJsonObject(
-//            {
-//                qMakePair(QString("id"), id),
-//                qMakePair(QString("question"), QuestionText),
-//                qMakePair(QString("correctAnswer"), correctAnswer),
-//                qMakePair(QString("answers"), answers),
-//            });
-
-//            array.push_back(question);
-//        }
-
-//        return array;
+        dataJson = getData("","");
     }
 }
 
@@ -92,39 +50,51 @@ QJsonArray ClientManager::getData(string fileName, string objName)
     auto questions = new vector<string>;
     int sizeOfLasQuestion;
 
-    for(int i = 0; i < 2; i++)
+    for(int i = 0; i < 5; i++)
     {
         questions->push_back(data.substr(0, data.find("$$$")));
-        sizeOfLasQuestion = questions[i].size();
+        sizeOfLasQuestion = data.substr(0, data.find("$$$")).size();
         dataSize -= sizeOfLasQuestion + 3;
         data = data.substr(sizeOfLasQuestion + 3, dataSize);
     }
 
-//    for(int i = 0; i < 5; i++)
-//    {
-//        string row = questions->at(i);
-//        int id = stoi(row.substr(row.find("--(id)--") + 8, row.find("--(correct answer)--") - row.find("--(id)--") - 8));
-//        int correctAnswer = stoi(row.substr(row.find("--(correct answer)--") + 20, row.find("--(question)--") - row.find("--(correct answer)--") - 20));
-//        string QuestionText = row.substr(row.find("--(question)--") + 14, row.find("--(answer 1)--") - row.find("--(question)--") - 14);
-//        vector<string> answers;
-//        string answer;
-//        for (int i = 1; i < 5; i++)
-//        {
-//            answer = row.substr(row.find("--(answer " + to_string(i) + ")--") + 14, row.find("--(answer " + to_string(i + 1) + ")--") - row.find("--(answer " + to_string(i) + ")--") - 14);
-//            answers.push_back(answer);
-//        }
+    for(int i = 0; i < 5; i++)
+    {
+        string row = questions->at(i);
+        int id = stoi(row.substr(row.find("--(id)--") + 8, row.find("--(correct answer)--") - row.find("--(id)--") - 8));
+        int correctAnswer = stoi(row.substr(row.find("--(correct answer)--") + 20, row.find("--(question)--") - row.find("--(correct answer)--") - 20));
+        string QuestionText = row.substr(row.find("--(question)--") + 14, row.find("--(answer 1)--") - row.find("--(question)--") - 14);
+        auto answers = QJsonArray();
+        string answer;
+        for (int i = 1; i < 5; i++)
+        {
+            answer = row.substr(row.find("--(answer " + to_string(i) + ")--") + 14, row.find("--(answer " + to_string(i + 1) + ")--") - row.find("--(answer " + to_string(i) + ")--") - 14);
+            answers.push_back(QString::fromStdString(answer));
+        }
 
-//        question = QJsonObject(
-//        {
-//            qMakePair(QString("id"), id),
-//            qMakePair(QString("question"), QuestionText),
-//            qMakePair(QString("correctAnswer"), correctAnswer),
-//            qMakePair(QString("answers"), answers),
-//        });
+        question = QJsonObject(
+        {
+            qMakePair(QString("id"), QJsonValue(id)),
+            qMakePair(QString("question"), QString::fromStdString(QuestionText)),
+            qMakePair(QString("correctAnswer"), QJsonValue(correctAnswer)),
+            qMakePair(QString("answers"), answers),
+        });
 
-//        array.push_back(question);
-//    }
+        array.push_back(question);
+    }
 
     return array;
 
   }
+
+void ClientManager::getDataFromServer() {
+    connectToHost();
+    socket->write("get");
+}
+
+void ClientManager::setDataToServer(string data) {
+    auto dataToSent = "r" + data;
+    QByteArray byteArrayData(dataToSent.c_str(), dataToSent.length());
+    socket->write(byteArrayData);
+}
+

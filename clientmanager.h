@@ -22,15 +22,20 @@ public:
 
     QTcpSocket* socket;
     QByteArray Data;
-    string DataStr;
 
 public slots:
     void sockReady();
     void sockDisc();
     void connectToHost();
+    void getDataFromServer();
+    void setDataToServer(string data);
 
     QJsonArray getData(string fileName, string objName);
+    QJsonArray getJsonData();
 
+private:
+    string DataStr;
+    QJsonArray dataJson;
 };
 
 #endif // CLIENTMANAGER_H

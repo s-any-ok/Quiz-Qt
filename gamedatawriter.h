@@ -10,6 +10,7 @@ public:
     void setDataManager(DatabaseManager);
     ~GameDataWriter();
     void setResult(string result);
+    void setResultToServer(string result);
 private:
     DatabaseManager datamanager;
     string resultsFileName = "results";

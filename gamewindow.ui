@@ -473,6 +473,32 @@
     </item>
    </layout>
   </widget>
+  <widget class="QPushButton" name="getGameDataButton">
+   <property name="geometry">
+    <rect>
+     <x>150</x>
+     <y>560</y>
+     <width>300</width>
+     <height>60</height>
+    </rect>
+   </property>
+   <property name="font">
+    <font>
+     <family>Arial Black</family>
+     <pointsize>15</pointsize>
+     <kerning>true</kerning>
+    </font>
+   </property>
+   <property name="mouseTracking">
+    <bool>false</bool>
+   </property>
+   <property name="text">
+    <string>Get Game Data</string>
+   </property>
+   <property name="autoDefault">
+    <bool>false</bool>
+   </property>
+  </widget>
   <zorder>nextQuestionButton</zorder>
   <zorder>checkAnswerButton</zorder>
   <zorder>pointsTitle</zorder>
@@ -484,6 +510,7 @@
   <zorder>currectQuestion</zorder>
   <zorder>radioButtons</zorder>
   <zorder>resultBox</zorder>
+  <zorder>getGameDataButton</zorder>
  </widget>
  <resources/>
  <connections/>

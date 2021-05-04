@@ -9,6 +9,8 @@
 #include <QString>
 #include <iostream>
 
+#include "clientmanager.h"
+
 GameInitializer::GameInitializer(DatabaseManager dataManager)
 {
     this->datamanager = dataManager;
@@ -50,10 +52,8 @@ vector<Question> GameInitializer::initQuestions()
     return questions;
 }
 
-vector<Question> GameInitializer::initQuestionsFromServer()
+vector<Question> GameInitializer::initQuestionsFromServer(QJsonArray data)
 {
-    ClientManager client;
-    QJsonArray data = client.getData("questions", "questions");
     vector<Question> questions;
 
     foreach (const QJsonValue & v, data) {
